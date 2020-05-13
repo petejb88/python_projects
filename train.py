@@ -149,7 +149,7 @@ def train_model(model,criterion,optimizer,trainloader,validloader):
     train_losses, valid_losses, accuracy_data = [], [], []
     
     for e in range(0,epochs):
-        print("Epoch {} starting...".format(e))
+        print("Epoch {} starting...".format(e+1))
         running_loss = 0
     
         for image_batch, label_batch in trainloader:
