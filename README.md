@@ -11,5 +11,5 @@ predict.py:
 - predicts flower name for given image file path
 
 cat_to_name.json:
-- dictionary of categorical outputs of the model with their associated flower names
+- dictionary of categorical outputs of the model with their associated names (to be provied with the data)
 
