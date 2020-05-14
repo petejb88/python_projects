@@ -9,6 +9,7 @@ predict.py:
 - loads checkpoint to (re)create model, trained as above
 - predicts class for given image file path
 
-cat_to_name.json:
-- dictionary of categorical output classes from data_dir with their associated English identifications
+example_data: 
+- example data_dir setup
+- includes cat_to_name.json: dictionary of categorical output classes from data_dir with their associated English identifications
 
