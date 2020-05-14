@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 
 import argparse
 
-parser = argparse.ArgumentParser(description="Predict flower name from a model checkpoint.")
+parser = argparse.ArgumentParser(description="Predict image name from a model checkpoint.")
 parser.add_argument('image_path', help="Path to image")
 parser.add_argument('checkpoint', help='Checkpoint for model')
 parser.add_argument('--topk', default=5, help="Return the top K most likely classes (default=5)")
-parser.add_argument('--category_names', default = 'cat_to_name.json', help="Document mapping categories to actual names (default: 'cat_to_name.json')")
+parser.add_argument('--category_names', default = 'cat_to_name.json', help="Dictionary mapping categorical class outputs to actual names (default: 'cat_to_name.json')")
 parser.add_argument('--gpu', action="store_true", default=False, help="Use GPU (default=False)")
 
 args = parser.parse_args()
@@ -123,7 +123,7 @@ def graph_predictions(top_probs, top_classes):
     ax1.set_yticklabels([])
     ax1.set_xticks([])
     ax1.set_yticks([])
-    ax1.set_title('Flower Prediction')
+    ax1.set_title('Prediction')
     ax1.imshow(image_path)
 
     ax2.barh(y_pos,top_probs)
@@ -140,7 +140,7 @@ def print_predictions(top_probs,top_classes):
     names = [cat_to_name[str(c)] for c in top_classes]
 
     for prob,name in zip(top_probs,names):
-        print("Flower Name: {}, Probability: {}".format(name,prob))
+        print("Object: {}, Probability: {}".format(name,prob))
     
 # main program
 def main():
