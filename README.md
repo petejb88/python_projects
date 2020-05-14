@@ -2,7 +2,7 @@
 
 train.py:
 - Use transfer learning, based on one of the Torchvision pretrained models, to produce a model trained on given data to classify images
---- input data: train/ and valid/ with images in subfolders named by an appropriate (numerical) class
+- input data: train/ and valid/ with images in subfolders named by an appropriate (numerical) class
 - saves model as checkpoint
 
 predict.py:
