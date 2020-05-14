@@ -1,6 +1,4 @@
-# python_projects
-
-Part of the AI Programming with Python nandegree.
+# transfer learning image classifier
 
 train.py:
 - Use transfer learning, based on one of the Torchvision pretrained models, to produce a model trained to classify flower images
