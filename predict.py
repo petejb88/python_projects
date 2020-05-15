@@ -16,9 +16,10 @@ import argparse
 parser = argparse.ArgumentParser(description="Predict image name from a model checkpoint.")
 parser.add_argument('image_path', help="Path to image")
 parser.add_argument('checkpoint', help='Checkpoint for model')
-parser.add_argument('--topk', default=5, help="Return the top K most likely classes (default=5)")
+parser.add_argument('--topk', default=5, type=int, help="Return the top K most likely classes (default=5)")
 parser.add_argument('--category_names', default = 'cat_to_name.json', help="Dictionary mapping categorical class outputs to actual names (default: 'cat_to_name.json')")
 parser.add_argument('--gpu', action="store_true", default=False, help="Use GPU (default=False)")
+parser.add_argument('--graph_pred', action="store_true", default=False, help="Graph predictions (default=False)")
 
 args = parser.parse_args()
 
@@ -108,12 +109,12 @@ def predict(image_path, model):
 
 
 # display prediction
-def graph_predictions(top_probs, top_classes):
+def graph_predictions(image_path,top_probs, top_classes):
     with open(args.category_names, 'r') as f:
         cat_to_name = json.load(f)
-    names = [cat_to_name[str(c)] for c in top_classes]
+    top_names = [cat_to_name[str(c)] for c in top_classes]
 
-    y_pos = np.arange(len(names))
+    y_pos = np.arange(len(top_names))
 
     from matplotlib.pyplot import figure
 
@@ -124,7 +125,8 @@ def graph_predictions(top_probs, top_classes):
     ax1.set_xticks([])
     ax1.set_yticks([])
     ax1.set_title('Prediction')
-    ax1.imshow(image_path)
+    image = Image.open(image_path)
+    ax1.imshow(image)
 
     ax2.barh(y_pos,top_probs)
     ax2.set_yticks(y_pos)
@@ -148,7 +150,10 @@ def main():
     print("Checkpoint Loaded!")
     print("Model created!")
     top_probs, top_classes = predict(args.image_path,model)
-    print_predictions(top_probs,top_classes)
+    if args.graph_pred:
+        graph_predictions(args.image_path,top_probs,top_classes)
+    else:
+        print_predictions(top_probs,top_classes)
     
 
 if __name__ == "__main__":
