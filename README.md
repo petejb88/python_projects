@@ -13,3 +13,7 @@ example_data:
 - example data_dir setup
 - includes cat_to_name.json: dictionary of categorical output classes from data_dir with their associated English identifications
 
+working: a more complete working example
+- analyzing xrays from covid tests
+- create symbolic links into train and valid folders
+ - applying train.py
