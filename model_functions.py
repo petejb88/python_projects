@@ -128,16 +128,19 @@ def train_model(model,criterion,optimizer,trainloader,validloader,epochs,print_e
     model.to(device)
     
     train_losses, valid_losses, accuracy_data = [], [], []
-    steps = 0  
     
     for e in range(0,epochs):
         print("Epoch {} starting...".format(e+1))
         running_loss = 0
+        train_count = 0
+        steps = 0  
     
         for image_batch, label_batch in trainloader:
             if print_steps:
                 print(steps)
             steps += 1
+            train_count += len(image_batch)
+            
             image_batch, label_batch = image_batch.to(device), label_batch.to(device)
         
             logps = model.forward(image_batch)
@@ -151,34 +154,39 @@ def train_model(model,criterion,optimizer,trainloader,validloader,epochs,print_e
             
             # stats per print_every steps
             if steps % print_every == 0:
-                train_losses.append(running_loss/len(trainloader))
                 # validation
                 accuracy = 0
                 valid_loss = 0
+                valid_count = 0
                 with torch.no_grad():
                     model.eval()
             
                     for image_batch, label_batch in validloader:
                         image_batch, label_batch = image_batch.to(device), label_batch.to(device)
                 
+                        valid_count += len(image_batch)
+                        
                         valid_logps = model.forward(image_batch)
                         valid_loss += criterion(valid_logps, label_batch)
-                        valid_losses.append(valid_loss/len(validloader))
                                     
                         # accuracy computation
                         valid_ps = torch.exp(valid_logps)
                         top_ps, top_labels = valid_ps.topk(1,dim=1)
-                        equals = top_labels == label_batch.view(*top_labels.shape)
-                        accuracy += torch.mean(equals.type(torch.FloatTensor))
-             
+                        equals = (top_labels == label_batch.view(*top_labels.shape))
+                        accuracy += torch.sum(equals.type(torch.FloatTensor))
+                
+                # update stat lists
+                accuracy_data.append(accuracy / valid_count)
+                valid_losses.append(valid_loss / valid_count)
+                train_losses.append(running_loss / train_count) # (len(trainloader)*print_every) )
+                       
                 # print stats
                 print(f'Epoch {int(e)+1}')
-                print(f'Running Loss: {running_loss / print_every}')
-                print(f'Validating Accuracy: {accuracy / len(validloader)}')
-                accuracy_data.append(accuracy / len(validloader))
-                print(f'Validating Loss: {valid_loss / len(validloader)}')
-            
+                print(f'Running Loss: {running_loss / train_count}') # (len(trainloader)*print_every)}')
+                print(f'Validating Accuracy: {accuracy / valid_count}')
+                print(f'Validating Loss: {valid_loss / valid_count}')
                 running_loss = 0
+                train_count = 0
                 model.train()
 
     print("Model trained!")
