@@ -65,7 +65,7 @@ def process_image(image):
     return process_transforms(image)
 
 # Predict image
-def predict(image_path,model,topk,gpu):
+def predict(image_path,model,topk=1,gpu=False):
     ''' Predict the class (or classes) of an image using a trained deep learning model.
     
     Inputs:
@@ -80,8 +80,8 @@ def predict(image_path,model,topk,gpu):
     device = torch.device("cuda:0" if (torch.cuda.is_available() and gpu) else "cpu")
     model = model.to(device)
     
-    image = Image.open(image_path)
-    processed_image = process_image(image).unsqueeze(0)
+    image = Image.open(image_path).convert('RGB')
+    processed_image = process_image(image)[:3,:,:].unsqueeze(0)
     processed_image = processed_image.to(device)
     log_ps = model.forward(processed_image)
     probs = torch.exp(log_ps)
