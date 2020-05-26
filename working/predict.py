@@ -1,1 +1,0 @@
-/home/petejb88/mlenv/transfer-learning-image-classifier/working/../predict.py
